@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>IVue</title>
     <script src="../lib/vue.js"></script>
-    <!-- 注意vue-resource依赖于vue,所以要先导入vue.js -->
+    <!-- 注意vue-resource 依赖于 vue,所以要先导入vue.js -->
     <!-- this.$http.* -->
     <script src="../lib/vue-resource.js"></script>
     <link rel="stylesheet" href="../lib/bootstrap.css">
@@ -15,12 +15,12 @@
 
 <body>
     <script>
-        function show() {
-            console.log('ok')
+        function show(data) {
+            console.log(data)
         }
     </script>
 
-    <script src="http://127.0.0.1:3000/getscript"></script>
+    <script src="http://127.0.0.1:3000/getScript?callback=show"></script>
 </body>
 
 </html>
