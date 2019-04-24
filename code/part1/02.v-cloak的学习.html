@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../lib/vue.js"></script>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+    
+<body>
+    <!-- Vue实例会控制这个元素中的所有内容 -->
+    <div id="app">
+        <!-- 插值表达式,能够解决差值表达式闪烁的问题 -->
+        <h1 v-cloak>+++ {{msg}} ---</h1>
+        <!-- v-text也可以解决闪烁问题，但会覆盖元素中的原本的内容 -->
+        <h1 v-text="msg">+++ ---</h1>
+        <!--可以识别内容中的标签 -->
+        <div v-html ="msg2"></div>
+        <!-- v-bind是vue中提供用于绑定属性的指令 -->
+        <input type="button" value="按钮" v-bind:title="mytitle + '123'">
+        <!-- v-bind可以简写为:，v-bind中可以写合法的js表达式-->
+        <input type="button" value="按钮" :title="mytitle + '123'">
+        <!-- v-on用来绑定事件-->
+        <input type="button" value="按钮" :title="mytitle + '123'" v-on:click="show">
+        <input type="button" value="按钮" :title="mytitle + '123'" @mouseover="show">
+    </div>
+
+    <script>
+        // 创建Vue实例
+        var vm = new Vue({
+            // Vue实例要控制的页面上的区域
+            el:"#app",
+            // el中需要用到的数据
+            data:{
+                msg:"Hello Vue",
+                msg2:"<h1>这是一个带有标签的文字内容</h1>",
+                mytitle:"这是一个自己定义的title"
+            },
+            methods: {
+                show:function() {
+                    alert("Hello")
+                }
+            },
+        });
+    </script>
+</body>
+</html>

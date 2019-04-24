@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../lib/vue.js"></script>
+</head>
+    
+<body>
+    <!-- Vue实例会控制这个元素中的所有内容 -->
+    <div id="app">
+        <!-- 插值表达式 -->
+        <h1>{{msg}}</h1>
+        <div>
+            <label>Id:
+                <input type="text" v-modele="id">
+            </label>
+            <label>Name:
+                <input type="text" v-modele="name">
+            </label>
+
+            <input type="button" value="添加" @clisk="add">
+        </div>
+        <!-- v-for循环的时候 key属性只能使用number或string -->
+        <!-- key在使用的时候，必须使用v-bind属性绑定 -->
+        <p v-for="item in list" :key="item.id">
+            <input type="checkbox">
+            {{item.id}}---{{item.name}}
+        </p>
+    </div>
+    <script>
+        // 创建Vue实例
+        var vm = new Vue({
+            // Vue实例要控制的页面上的区域
+            el:"#app",
+            // el中需要用到的数据
+            data:{
+                msg:"Hello Vue",
+                id:"",
+                name:"",
+                list:[
+                    {id:1, name:'李斯'},
+                    {id:2, name:'嬴政'},
+                    {id:3, name:'赵高'},
+                    {id:4, name:'荀子'},
+                    {id:5, name:'韩非'},
+                ]
+            },
+            methods: {
+                add() {
+                    this.list.push({id:this.id, name:this.name})
+                }
+            },
+        });
+    </script>
+</body>
+</html>
