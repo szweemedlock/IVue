@@ -63,7 +63,8 @@
             </tbody>
         </table>
     </div>
-    <div id="app2" v-color="'pink'" v-fontWeight="900">
+    <!-- 注意: 这里的自定义指令不能有大写,必须都是小写 -->
+    <div id="app2" v-color="'pink'" v-weight="900" v-size="'30px'">
         {{new Date() | dateFormat('')}}
     </div>
     <script>
@@ -115,14 +116,14 @@
             // 样式只要通过指令绑定给了元素,不管这个元素有没有被插入到页面中去,这个元素肯定有了一个内联的样式
             // 将来元素肯定会显示到页面中,这时候,浏览器的渲染引擎必然会解析样式,应用给这个元素
             // 和样式相关的最好放在这里执行
-            bind:function(el, binding) {
+            bind: function (el, binding) {
                 // value 与 expression不同 value是计算后的值,expression是原样输出字符串
                 el.style.color = binding.value
             },
-            inserted:function() {
+            inserted: function () {
 
             },
-            updated:function() {
+            updated: function () {
 
             }
         })
@@ -224,11 +225,17 @@
                     }
                 }
             },
-            directives:{
-                'fontWeight':{
-                    bind:function(el, binding) {
+            // 私有指令函数 
+            directives: {
+                // 设置字体粗细
+                'weight': {
+                    bind: function (el, binding) {
                         el.style.fontWeight = binding.value
                     }
+                },
+                // 这个function等同于把代码写到了,bind,update中去
+                'size': function (el, binding) {
+                    el.style.fontSize = parseInt(binding.value) + 'px'
                 }
             }
         })

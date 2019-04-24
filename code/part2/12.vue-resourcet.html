@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>IVue</title>
+    <script src="../lib/vue.js"></script>
+    <!-- 注意vue-resource依赖于vue,所以要先导入vue.js -->
+    <!-- this.$http.* -->
+    <script src="../lib/vue-resource.js"></script>
+    <link rel="stylesheet" href="../lib/bootstrap.css">
+</head>
+
+<body>
+    <!-- Vue实例会控制这个元素中的所有内容 -->
+    <div id="app">
+        <!-- 插值表达式 -->
+        <form id="h1" action="" method="POST" class="form-inline" role="form">
+            <div class="form-group">
+                <label class="sr-only" for="">{{msg}}</label>
+                <input type="email" class="form-control" id="" placeholder="Input field" v-model="msg">
+            </div>
+            <button type="button" @click="msg='No'" class="btn btn-primary">Submit</button>
+            <button type="button" @click="getInfo" class="btn btn-primary">GetInfo</button>
+            <button type="button" @click="postInfo" class="btn btn-primary">PostInfo</button>
+            <button type="button" @click="jsonpInfo" class="btn btn-primary">JsonPInfo</button>
+        </form>
+    </div>
+    <script>
+        // 创建Vue实例
+        var vm = new Vue({
+            // Vue实例要控制的页面上的区域
+            el: "#app",
+            // el中需要用到的数据
+            data: {
+                msg: "569212361@qq.com"
+            },
+            methods: {
+                show() {
+                    console.log('执行了show方法');
+                },
+                getInfo() {
+                    // 当发起get请求后,通过.then来设置成功的回调函数
+                    this.$http.get('http://localhost:8080/getInfo').then(function (result) {
+                        console.log(result.body)
+                    })
+                },
+                postInfo() {
+                    // 发起post请求
+                    // 手动发起的post请求默认没有表单格式,所以有的服务器处理不了
+                    // 通过post方法的第三个参数,设置提交的内容类型为普通的表单数据格式
+                    this.$http.post('http://localhost:8080/postInfo', {}, {
+                        emulateJSON: true
+                    }).then(result => {
+                        console.log(result.body)
+                    })
+                },
+                jsonpInfo() {
+                    this.$http.jsonp('http://localhost:8080/jsonpInfo').then(result => {
+                        console.log(result.body)
+                    })
+                }
+            },
+            beforeCreate() {
+                // 注意:在生命周期执行的时候,data&methods中的数据都还没有初始化
+            },
+            created() {
+                console.log(this.msg)
+                this.show
+            },
+            beforeMount() {
+                // 这是第三个生命周期函数,表示模板已经编译完成,但是尚未把模板渲染到页面
+                // 在这个钩子执行的时候,页面中的元素,还没有被真正替换过来,只是之前写的一些模板字符串
+                console.log(document.getElementById('h1').innerText)
+            },
+            mounted() {
+                // 这是第四个生命周期函数,表示内存中的模板,已经真实的挂在到了页面中,用户已经可以看到了渲染好的页面了
+                console.log(document.getElementById('h1').innerText)
+                // 注意:mounted是实例创建期间的最后一个生命函数,当执行完,实例就已经完全创建好了.并一直躺在内存中
+            },
+            // 这时候表示我们的界面还没有被更新,但是数据已经被更新了
+            beforeUpdate() {
+                console.log('界面上元素的内容:' + document.getElementById('h1').innerText)
+                console.log('data 中的 msg数据是:' + this.msg)
+            },
+            // 这时候页面和data数据已经保持同步了,都是最新的
+            updated() {
+
+            }
+        });
+    </script>
+</body>
+
+</html>
