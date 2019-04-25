@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>IVue</title>
+    <script src="../lib/vue.js"></script>
+</head>
+
+<body>
+    <!-- Vue实例会控制这个元素中的所有内容 -->
+    <div id="app">
+        <!-- 如果要使用组件,直接把组件的名称以html的标签引入到页面中即可 -->
+        <my-com1></my-com1>
+    </div>
+
+    <script>
+        // 1.组件可以有自己的data数据
+        // 2.组件的 data 和实例的 data 构建方式不同, 实例中的data可以是对象,组件中必须是方法
+        // 3.组件中的 data 除了必须是方法之外, 还必须返回一个对象
+        // 4.组件中的 data 和实例中使用方式完全一样
+        Vue.component('myCom1', Vue.extend({
+            // 通过这个属性指定了组件要展示的html结构
+            template: '<h1>这是使用 Vue.extend 创建出来的组件 --- {{msg}}</h1>',
+            data: function () {
+                // 组建中 data 定义的数据
+                return {
+                    msg:'这是组件中定义的数据'
+                }
+            }
+        }));
+
+        // 创建Vue实例
+        var vm = new Vue({
+            // Vue实例要控制的页面上的区域
+            el: "#app",
+            // el中需要用到的数据
+            data: {
+                msg: "Hello Vue"
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>IVue</title>
+    <script src="../lib/vue.js"></script>
+</head>
+
+<body>
+    <!-- Vue实例会控制这个元素中的所有内容 -->
+    <div id="app">
+        <!-- 如果要使用组件,直接把组件的名称以html的标签引入到页面中即可 -->
+        <my-com1></my-com1>
+        <my-com2></my-com2>
+        <my-com3></my-com3>
+    </div>
+
+    <div id="app2">
+        <my-com3></my-com3>
+        <login></login>
+    </div>
+
+    <!-- 在被控制的#app外面,使用 template 元素,定义组件的HTML模板结构 -->
+    <template id="tmpl">
+        <h1>这是通过 template 元素,定义组件的HTML模板结构</h1>
+    </template>
+
+    <template id="tmpl2">
+        <h1>这是一个新的私有组件,定义在外面</h1>
+    </template>
+
+    <script>
+        // 第一种创建组件的方式
+        Vue.component('myCom1', Vue.extend({
+            // 通过这个属性指定了组件要展示的html结构
+            template: '<h3>这是使用 Vue.extend 创建出来的组件</h3>'
+        }));
+
+        // 第二种创建组件的方式
+        // 注意:不论是哪种方式创建出来的组件,组件的 template 属性指向的模板内容,必须有且只有唯一的一个根元素
+        Vue.component('myCom2', {
+            template:'<h3>这是直接使用 Vue.component 创建出来的组件</h3>'
+        });
+
+        // 第三种创建组件的方式
+        Vue.component('myCom3', {
+            template:'#tmpl'
+        });
+
+        // 创建Vue实例
+        var vm = new Vue({
+            // Vue实例要控制的页面上的区域
+            el: "#app",
+            // el中需要用到的数据
+            data: {
+                msg: "Hello Vue"
+            }
+        });
+
+        var vm2 = new Vue({
+            el:"#app2",
+            data:{
+
+            },
+            methods: {
+                
+            },
+            filters:{
+
+            },
+            directives:{
+
+            },
+            components:{
+                // 定义实例内部的私有组件
+                login:{
+                    template:'#tmpl2'
+                }
+            },
+            beforeCreate() {
+                
+            },
+            created() {
+                
+            },
+            beforeMount() {
+                
+            },
+            mounted() {
+                
+            },
+            beforeUpdate() {
+                
+            },
+            updated() {
+                
+            },
+            beforeDestroy() {
+                
+            },
+            destroyed() {
+                
+            }
+        })
+    </script>
+</body>
+
+</html>

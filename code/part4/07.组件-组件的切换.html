@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>IVue</title>
+    <script src="../lib/vue.js"></script>
+    <link rel="stylesheet" href="../lib/bootstrap.css">
+    <link rel="stylesheet" href="../lib/animate.css">
+</head>
+
+<body>
+    <!-- Vue实例会控制这个元素中的所有内容 -->
+    <div id="app">
+        <a href="" @click.prevent="flag=true">登录</a>
+        <a href="" @click.prevent="flag=false">注册</a>
+
+        <login v-if="flag"></login>
+        <register v-else="flag"></register>
+    </div>
+
+    <template id="tmpl">
+        <h3>登录组件</h3>
+    </template>
+
+    <template id="tmpl1">
+        <h3>注册组件</h3>
+    </template>
+
+    <script>
+        var dataObj = { count : 0 }
+
+        // 每当点击按钮,让 data 中的 count 值 +1
+        Vue.component('login', {
+            // 通过这个属性指定了组件要展示的html结构
+            template: '#tmpl',
+            data: function () {
+                // 组建中 data 定义的数据
+                // 之所以需要使用 function 并且 return 一个对象, 就是为了防止多个相同组件之间共享数据操作, 如果返回的是 dataObj
+                // 那么操作任何一个组件, 其他相同的组件数据也会随之改变!!!
+                return { count : 0}
+            },
+            methods: {
+                increment() {
+                    this.count += 1
+                }
+            },
+        });
+
+        Vue.component('register', {
+            // 通过这个属性指定了组件要展示的html结构
+            template: '#tmpl1',
+            data: function () {
+                // 组建中 data 定义的数据
+                // 之所以需要使用 function 并且 return 一个对象, 就是为了防止多个相同组件之间共享数据操作, 如果返回的是 dataObj
+                // 那么操作任何一个组件, 其他相同的组件数据也会随之改变!!!
+                return { count : 0}
+            },
+            methods: {
+                increment() {
+                    this.count += 1
+                }
+            },
+        });
+
+        // 创建Vue实例
+        var vm = new Vue({
+            // Vue实例要控制的页面上的区域
+            el: "#app",
+            // el中需要用到的数据
+            data: {
+                flag: false
+            }
+        });
+    </script>
+</body>
+
+</html>
