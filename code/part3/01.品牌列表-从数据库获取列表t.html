@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>IVue</title>
     <script src="../lib/vue.js"></script>
+    <script src="../lib/vue-resource.js"></script>
     <link rel="stylesheet" href="../lib/bootstrap.css">
     <style>
 
@@ -24,15 +25,11 @@
             <!-- form-inline不会换行-->
             <div class="panel-body form-inline">
                 <label for="">
-                    Id:
-                    <input type="text" class="form-control" v-model="id">
-                </label>
-                <label for="">
                     Name:
                     <!-- f2键调用add()方法 -->
-                    <input type="text" class="form-control" v-model="name" @keyup.f2="add" @keyup.enter="add">
+                    <input type="text" class="form-control" v-model="name" @keyup.f2="add" @keyup.enter="saveBrand">
                 </label>
-                <input type="button" value="添加" class="btn btn-primary" @click="add">
+                <input type="button" value="添加" class="btn btn-primary" @click="saveBrand">
 
                 <label for="">
                     KeyWord:
@@ -54,11 +51,11 @@
             </thead>
             <tbody>
                 <!-- 自定义search方法，同时把关键字通过传参的形式，传递给了search方法-->
-                <tr v-for="(item) in search(KeyWord)" :key="item.id">
-                    <td>{{item.id}}</td>
+                <tr v-for="(item, index) in search(KeyWord)" :key="item.id">
+                    <td>{{index + 1}}</td>
                     <td>{{item.name}}</td>
                     <td>{{item.time | dateFormat('')}}</td>
-                    <td><a @click.prevent="del(item.id)">Delete</a></td>
+                    <td><a @click.prevent="deleteBrand(item.id)">Delete</a></td>
                 </tr>
             </tbody>
         </table>
@@ -68,6 +65,11 @@
         {{new Date() | dateFormat('')}}
     </div>
     <script>
+        // vue-resource全局配置
+        // 如果通过全局配置了请求的数据接口,根域名,则在每次单独发起 http 请求的时候请求的 url 路径应该以相对路径开头
+        // 前面不能带 / , 否则不会启用根路径做拼接
+        Vue.http.options.root = 'http://localhost:8089/'
+        Vue.http.options.emulateJSON = true
         // 全局的过滤器
         // 所有的vue实例都共享
         Vue.filter('dateFormat', function (dateStr, pattern = "") {
@@ -128,7 +130,6 @@
             }
         })
 
-
         // 创建Vue实例
         var vm = new Vue({
             // Vue实例要控制的页面上的区域
@@ -136,21 +137,17 @@
             // el中需要用到的数据
             data: {
                 msg: '这个用来测试过滤器，单纯，单纯，单纯。',
-                id: '',
                 name: '',
                 KeyWord: '',
                 list: [{
-                        id: 1,
                         name: '保时捷',
                         time: new Date()
                     },
                     {
-                        id: 2,
                         name: '法拉利',
                         time: new Date()
                     },
                     {
-                        id: 3,
                         name: '斯巴鲁',
                         time: new Date()
                     },
@@ -160,7 +157,6 @@
                 // 添加数据
                 add() {
                     var car = {
-                        id: this.id,
                         name: this.name,
                         time: new Date()
                     }
@@ -190,8 +186,55 @@
                         // ES6中，为字符串提供了一个新方法，如果包含，返回true
                         if (element.name.includes(KeyWord)) return element
                     })
+                },
+                // 获取所有品牌的列表
+                getAllList() {
+                    // 可以直接通过this.$http来发起数据请求
+                    // 根据接口API文档,应该发起一个get请求
+                    this.$http.get('brand/findAll').then(result => {
+                        if (result != null) {
+                            this.list = result.body
+                        } else {
+                            alert('获取数据失败!')
+                        }
+                    })
+                },
+                saveBrand() {
+                    // 保存信息
+                    // post中接收三个参数
+                    // 1:请求的url地址
+                    // 2:提交给服务器的数据,要以对象形式提交给服务器{name:this.name}
+                    // 3:是一个配置对象,要以哪种表单类型提交过去
+                    this.$http.post('brand/save', {
+                            name: this.name,
+                            time: new Date()
+                        } // 通过.then来设置成功的回调函数
+                    ).then(result => {
+                        if (result != null) {
+                            // 刷新列表
+                            this.getAllList()
+                            // 清空name输入框中的值
+                            this.name = ''
+                        } else {
+                            alert("添加失败了!")
+                        }
+                    })
+                },
+                deleteBrand(id) {
+                    this.$http.get('deleteById?id=' + id).then(result => {
+                        if (result != null) {
+                            // 刷新列表
+                            this.getAllList()
+                        } else {
+                            alert("添加失败了!")
+                        }
+                    })
                 }
-            }
+            },
+            created() {
+                // 当 vm实例的 data 和 methods 初始化完毕后,vm实例会自动执行 created 这个生命周期函数
+                this.getAllList()
+            },
         });
 
         // 自定义一个私有的过滤器(局部)
