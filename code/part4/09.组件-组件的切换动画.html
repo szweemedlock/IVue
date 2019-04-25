@@ -10,16 +10,7 @@
     <link rel="stylesheet" href="../lib/bootstrap.css">
     <link rel="stylesheet" href="../lib/animate.css">
     <style>
-        .v-enter,
-        .v-leave-to {
-            opacity: 0;
-            transform: translateX(150px)
-        }
-
-        .v-enter-active,
-        .v-leave-active {
-            transition: all 0.5s ease;
-        }
+        
     </style>
 </head>
 
@@ -31,8 +22,8 @@
         <!-- vue提供了这个元素, 展示对应名称的组件 -->
         <!-- is属性指定需要展示的组件的名称 -->
         <!-- 通过 mode 属性设置组件切换时候的模式 -->
-        <transition mode="out-in">
-            <component :is="comName"></component>
+        <transition mode="out-in" enter-active-class="flipInX" leave-active-class="flipOutX">
+            <component :is="comName" class="animated"></component>
         </transition>
 
         <!-- 总结 vue 提供的标签 -->
