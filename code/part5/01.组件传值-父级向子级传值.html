@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>IVue</title>
+    <script src="../lib/vue.js"></script>
+    <link rel="stylesheet" href="../lib/bootstrap.css">
+    <link rel="stylesheet" href="../lib/animate.css">
+    <style>
+        .ball {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: coral;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Vue实例会控制这个元素中的所有内容 -->
+    <div id="app">
+        <!--父组件, 可以再引用子组件的时候, 通过属性绑定(v-bind)的形式, 把需要传递给子组件的数据,以属性绑定的形式, 传递到子组件内部 -->
+        <com1 :parent="msg"></com1>
+        <button @click="flag=!flag" type="button" class="btn btn-primary">button</button>
+        <transition @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter">
+            <div class="ball" v-show="flag"></div>
+        </transition>
+    </div>
+
+    <template id="tmpl">
+        <h1>这是子组件 --- {{parent}}</h1>
+    </template>
+
+    <script>
+        // 创建Vue实例
+        var vm = new Vue({
+            // Vue实例要控制的页面上的区域
+            el: "#app",
+            // el中需要用到的数据
+            data: {
+                flag: false,
+                comName: 'register',
+                msg: '123 啊-父组件中的数据'
+            },
+            methods: {
+                beforeEnter(el) {
+                    el.style.transform = 'translate(0, 0)'
+                },
+                enter(el, done) {
+                    el.offsetWidth
+                    el.style.transform = 'translate(150px, 450px)'
+                    el.style.transition = 'all 1s ease'
+                    done()
+                },
+                afterEnter(el) {
+                    this.flag = !this.flag
+                    // vue 把一个完整的动画,使用钩子函数,拆分为了两部分
+                    // 我们使用 flag 标识符来表示动画的切换
+                }
+            },
+            components: {
+                com1: {
+                    template: '#tmpl',
+                    // 把父组件传递过来的 parentMsg 属性, 现在 props 数组中定义, 这样才能使用这个数据
+                    // 与 data 中的数据不同 props 中的数据都是只读的, 无法重新赋值
+                    props: [
+                        'parent'
+                    ],
+                    // data 中的数据, 并不是通过父组件传递过来的, 而是自身私有的
+                    // 比如子组件通过 ajax 请求的数据 都可以放在 data 里
+                    data() {
+                        return {
+                            id:1,
+                            name:'dataName'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
