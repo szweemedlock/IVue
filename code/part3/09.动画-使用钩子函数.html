@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>IVue</title>
+    <script src="../lib/vue.js"></script>
+    <link rel="stylesheet" href="../lib/bootstrap.css">
+    <!-- Just-add-water CSS animations -->
+    <link rel="stylesheet" href="../lib/animate.css">
+    <!-- 自动以两组样式,来控制 transition 内部的元素实现动画 -->
+    <style>
+        .ball {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: coral
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Vue实例会控制这个元素中的所有内容 -->
+    <div id="app">
+
+        <button type="button" class="btn btn-primary" @click="flag=!flag">button</button>
+        <!-- 1.使用transition元素包裹小球-->
+        <transition @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter">
+            <div class="ball" v-show="flag"></div>
+        </transition>
+    </div>
+    <script>
+        // 创建Vue实例
+        var vm = new Vue({
+            // Vue实例要控制的页面上的区域
+            el: "#app",
+            // el中需要用到的数据
+            data: {
+                flag: false,
+            },
+            methods: {
+                // 注意: 动画钩子函数的第一个参数:el, 表示要执行动画的元素, 是个原生的JS DOM对象
+                // 可以认为 el 是通过 document.getElementById('') 方式获取到的原生对象
+                beforeEnter(el) {
+                    // 表示动画入场之前, 此时动画尚未开始, 可以再此之中设置元素开始动画之前的起始样式
+                    // 设置小球开始动画之前的起始位置
+                    el.style.transform = "translate(0, 0)"
+                },
+                enter(el, done) {
+                    // 这句话没有实际作用,但必须写出来,不然没有动画效果
+                    el.offsetWidth
+                    // 表示动画开始之后的样式,这里可以设置小球完成动画之后的结束状态
+                    el.style.transform = "translate(150xp, 450px)"
+                    el.style.transition = "all 1s ease"
+                    // 这里的 done函数 就是 afterEnter函数的引用
+                    done()
+                },
+                afterEnter(el) {
+                    this.flag = !this.flag
+                }
+            },
+        });
+    </script>
+</body>
+
+</html>
